@@ -1,0 +1,40 @@
+.timeline-container {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  margin: 40px 0;
+  overflow: auto;
+  height: auto;
+  max-height: max-content;
+}
+
+.timeline-container::after {
+  background-color: #e17b77;
+  content: "";
+  position: absolute;
+  left: calc(50% - 2px);
+  width: 4px;
+  height: 100%;
+}
+
+.timeline-container-scroll {
+  background-color: #ffffff;
+  max-height: 75vh;
+  overflow: auto;
+  margin: 0px;
+  text-align: justify;
+  padding: 0px;
+  text-align: center;
+}
+
+.upper-p {
+  margin-bottom: -25px;
+  color: #e17b77;
+  font-weight: bold;
+}
+
+.lower-p {
+  margin-top: -25px;
+  color: #e17b77;
+  font-weight: bold;
+}

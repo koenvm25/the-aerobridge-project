@@ -1,0 +1,48 @@
+@import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
+
+body {
+  font-family: "Poppins", sans-serif;
+  background: #fff;
+}
+
+.edit-model-button {
+  margin-left: 110px;
+}
+
+.cl-btn {
+  margin-left: 10px;
+}
+
+.master-cpt-btn {
+  margin-left: 255px;
+}
+
+.airc-comp-btn {
+  margin-left: 150px;
+}
+
+.build-aircraft-button {
+  margin-bottom: 20px;
+}
+
+.aircraft-blueprint-search {
+  margin-top: 10px;
+}
+
+.Table {
+  margin-top: 20px;
+}
+
+.quantity-input {
+  width: 25%;
+  margin-left: 10px;
+  align-self: middle;
+}
+
+.mainContainer {
+  max-height: 100vh;
+  padding-left: 0%;
+  padding-right: 0%;
+  margin-left: 0%;
+  margin-right: 0%;
+}

@@ -1,0 +1,117 @@
+.imageRow {
+  text-align: center;
+  padding-top: 75px;
+  padding-bottom: 0px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.imageText {
+  text-align: center;
+  padding-top: 0px;
+  padding-bottom: 20px;
+}
+
+.statusContainer {
+  margin-top: 10px;
+  box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px,
+    rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
+}
+
+.statusHeader {
+  margin-top: 15px;
+  text-align: center;
+}
+
+.statusTable {
+  margin-top: 5px;
+}
+
+.statusTableWidth {
+  width: 25%;
+}
+
+.available {
+  height: 25px;
+  width: 25px;
+  background-color: #00b712;
+  background-image: linear-gradient(315deg, #00b712 0%, #5aff15 74%);
+  border-radius: 50%;
+  display: inline-block;
+  box-shadow: 1px 1px 1px #939393;
+}
+
+.assembled {
+  height: 25px;
+  width: 25px;
+  background-color: #ff4e00;
+  background-image: linear-gradient(315deg, #ff4e00 0%, #ec9f05 74%);
+  border-radius: 50%;
+  display: inline-block;
+  box-shadow: 1px 1px 1px #e78267;
+}
+
+.broken {
+  height: 25px;
+  width: 25px;
+  background-color: #8f0210;
+  background-image: linear-gradient(315deg, #b10415 0%, #fc2d4c 74%);
+  box-shadow: 1px 1px 1px #948e8e;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.available-Small {
+  height: 15px;
+  width: 15px;
+  background-color: #00b712;
+  background-image: linear-gradient(315deg, #00b712 0%, #5aff15 74%);
+  border-radius: 50%;
+  display: inline-block;
+  margin-left: 5px;
+  box-shadow: 1px 1px 1px #939393;
+}
+
+.assembled-Small {
+  height: 15px;
+  width: 15px;
+  background-color: #ff4e00;
+  background-image: linear-gradient(315deg, #ff4e00 0%, #ec9f05 74%);
+  border-radius: 50%;
+  display: inline-block;
+  margin-left: 5px;
+  box-shadow: 1px 1px 1px #e78267;
+  /* border: 1px solid black; */
+}
+
+.broken-Small {
+  height: 15px;
+  width: 15px;
+  background-color: #8f0210;
+  background-image: linear-gradient(315deg, #b10415 0%, #fc2d4c 74%);
+  box-shadow: 1px 1px 1px #948e8e;
+  border-radius: 50%;
+  display: inline-block;
+  margin-left: 5px;
+}
+
+.inTransit-Small {
+  height: 15px;
+  width: 15px;
+  background-color: #2a2a72;
+  background-image: linear-gradient(315deg, #2a2a72 0%, #009ffd 74%);
+  border-radius: 50%;
+  display: inline-block;
+  margin-left: 5px;
+  box-shadow: 1px 1px 1px #424242;
+  /* border: 1px solid black; */
+}
+
+/* .inTransit {
+  height: 25px;
+  width: 25px;
+  background: blue;
+  border-radius: 50%;
+} */

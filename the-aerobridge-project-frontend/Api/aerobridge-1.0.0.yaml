@@ -1,0 +1,959 @@
+---
+openapi: "3.0.2"
+info:
+  title: "Aerobridge MS API specification"
+  description: |-
+    All the interfaces for the Aerobridge management server are defined here. Using these APIs, you can interact with management server.
+    The API is a limited subset of all the functionality of Aerobridge.
+
+  version: "1.6.0"
+servers:
+  - url: "https://https://aerobridge-database.herokuapp.com/"
+    description: "Aerobridge Server API"
+
+paths:
+  /api/ping:
+    get:
+      description: returns 'pong' if server is isActive
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: server is active
+      tags:
+        - Ping
+
+  /model:
+    get:
+      description: List all aircrafts in the database
+      parameters: []
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Model"
+          description: "Array of models succesfully retrieved"
+        "500":
+          description: "Could not resolve request"
+      tags:
+        - Models
+
+    post:
+      description: Posts a new model to the database
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Model"
+        required: true
+      responses:
+        "200":
+          description: "Model was succesfully added"
+        "500":
+          description: "Could not resolve request"
+      tags:
+        - Models
+
+  /model/{id}:
+    get:
+      description: Single aircrafts from the database
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: integer id
+          schema:
+            $ref: "#/components/schemas/Id"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Model"
+          description: "Model details successfully retrieved"
+        "500":
+          description: "Could not resolve request"
+      tags:
+        - Models
+
+    put:
+      description: Puts updated data to an existing model in database
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: integer id
+          schema:
+            $ref: "#/components/schemas/Id"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Model"
+        required: true
+      responses:
+        "200":
+          description: "Model was succesfully updated"
+        "500":
+          description: "Could not resolve request"
+      tags:
+        - Models
+
+    delete:
+      description: Deletes an existing model in database
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: integer id
+          schema:
+            $ref: "#/components/schemas/Id"
+      responses:
+        "200":
+          description: "Model was succesfully deleted"
+        "500":
+          description: "Could not resolve request"
+      tags:
+        - Models
+
+  /serie:
+    get:
+      summary: "List of all series"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Serie"
+          description: "Successfully retrieved all series"
+      tags:
+        - Series
+
+  /serie/model/{id}:
+    get:
+      summary: "List of series that belong to {modelId}"
+      description: "List of all the series that belong to a certain model"
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: "integer id of model"
+          schema:
+            $ref: "#/components/schemas/Id"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Serie"
+          description: "Successfully retrieved a serie"
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Serie"
+          description: "No serie found with {modelId}"
+        "406":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Serie"
+          description: "{modelId} was not acceptable"
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Serie"
+          description: "Internal server error"
+      tags:
+        - Series
+
+  /serie/{id}:
+    get:
+      summary: "Get a serie with {serieId}"
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: "integer id of serie"
+          schema:
+            $ref: "#/components/schemas/Id"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Serie"
+          description: "Successfully retrieved a serie"
+        "404":
+          description: "No serie found with {serieId}"
+        "406":
+          description: "{serieId} was not acceptable"
+        "500":
+          description: "Internal server error"
+      tags:
+        - Series
+
+    put:
+      summary: "Edit a serie with {serieId}"
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: "integer id of serie"
+          schema:
+            $ref: "#/components/schemas/Id"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Serie"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Serie"
+          description: "Successfully updated a serie"
+        "404":
+          description: "No serie found with {serieId}"
+        "406":
+          description: "{serieId} was not acceptable"
+        "500":
+          description: "Internal server error"
+      tags:
+        - Series
+
+    delete:
+      summary: "Delete a serie with {serieId}"
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: "integer id of serie"
+          schema:
+            $ref: "#/components/schemas/Id"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Serie"
+          description: "Succesfully deleted the serie"
+        "404":
+          description: "No serie found with {serieId}"
+        "406":
+          description: "{serieId} was not acceptable"
+        "500":
+          description: "Internal server error"
+      tags:
+        - Series
+
+  /serie/add/{id}:
+    post:
+      summary: "Add a serie to model {modelId}"
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: "integer id of model"
+          schema:
+            $ref: "#/components/schemas/Id"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Serie"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Serie"
+          description: "Successfully saved the serie"
+        "404":
+          description: "No serie found with {modelId}"
+        "406":
+          description: "{modelId} was not acceptable"
+        "500":
+          description: "Internal server error"
+      tags:
+        - Series
+
+  /serie/{id}/master-components:
+    get:
+      summary: "get master components of a serie with {serieId}"
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: "integer id of serie"
+          schema:
+            $ref: "#/components/schemas/Id"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MasterComponent"
+          description: "Successfully retrieved master components of a serie"
+        "404":
+          description: "No serie found with {serieId}"
+        "406":
+          description: "{serieId} was not acceptable"
+        "500":
+          description: "Internal server error"
+      tags:
+        - Series
+
+    post:
+      summary: "Add master components to a serie with {serieId}"
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: "integer id of serie"
+          schema:
+            $ref: "#/components/schemas/Id"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MasterComponent"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Serie"
+          description: "Successfully added master components to a serie with {serieId}"
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Serie"
+          description: "No serie found with {serieId}"
+        "406":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Serie"
+          description: "{serieId} was not acceptable"
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Serie"
+          description: "Internal server error"
+      tags:
+        - Series
+
+    put:
+      summary: "Edit master components of a serie with {serieId}"
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: "integer id of serie"
+          schema:
+            $ref: "#/components/schemas/Id"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MasterComponent"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Serie"
+          description: "Successfully edited master components of serie with {serieId}"
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Serie"
+          description: "No serie found with {serieId}"
+        "406":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Serie"
+          description: "{serieId} was not acceptable"
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Serie"
+          description: "Internal server error"
+      tags:
+        - Series
+
+  /master-component:
+    get:
+      summary: Get all master components
+      description: This call lists all master components from the datbase
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/MasterComponent"
+          description: "OK"
+        "400":
+          description: "Bad Request"
+      tags:
+        - Master components
+
+    post:
+      summary: Create a new master component
+      description: Create a new master component in the database
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MasterComponent"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+        "400":
+          description: "Bad Request"
+      tags:
+        - Master components
+
+  /master-component/{id}:
+    get:
+      summary: Get a single master component
+      description: This call lists the information from a single master component
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: interger id from database object
+          schema:
+            $ref: "#/components/schemas/Id"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  $ref: "#/components/schemas/MasterComponent"
+          description: "OK"
+        "406":
+          description: "Not Acceptable"
+      tags:
+        - Master components
+
+    delete:
+      summary: Deletes a single master component
+      description: Delete master component from database
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: interger id from database object
+          schema:
+            $ref: "#/components/schemas/Id"
+      responses:
+        "200":
+          description: "OK"
+        "406":
+          description: "Not Acceptable"
+      tags:
+        - Master components
+
+    put:
+      summary: Change or edit information of a master component
+      description: Change or edit information of a master component in the database
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: interger id from database object
+          schema:
+            $ref: "#/components/schemas/Id"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MasterComponent"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+        "406":
+          description: "Not Acceptable"
+      tags:
+        - Master components
+
+  /master-component/low-stock:
+    get:
+      summary: Gets the low stock of a master component
+      description: Gets the stock value of the components of a master componenten
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/MasterComponent"
+          description: "OK"
+        "400":
+          description: "Bad Request"
+      tags:
+        - Master components
+
+  /component/{id}:
+    get:
+      summary: Gets a single component
+      description: Get a single component from a master component blueprint
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: interger id from database object
+          schema:
+            $ref: "#/components/schemas/Id"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  $ref: "#/components/schemas/Component"
+          description: "OK"
+        "404":
+          description: "Not Found"
+        "406":
+          description: "Not Acceptable"
+      tags:
+        - Component
+
+    post:
+      summary: Add new component
+      description: Add new component from a master component blueprint
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: an id of the master component where this component is based on
+          schema:
+            $ref: "#/components/schemas/Id"
+      responses:
+        "200":
+          description: "OK"
+        "404":
+          description: "Not Found"
+        "406":
+          description: "Not Acceptable"
+      tags:
+        - Component
+
+    put:
+      summary: edit component details
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: interger id from database object
+          schema:
+            $ref: "#/components/schemas/Id"
+      responses:
+        "200":
+          description: "OK"
+        "404":
+          description: "Not Found"
+        "406":
+          description: "Not Acceptable"
+      tags:
+        - Component
+
+  /aircraft:
+    get:
+      summary: "Get all aircrafts"
+      parameters: []
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Aircraft"
+          description: "OK"
+      tags:
+        - Aircrafts
+
+  /aircraft/{id}:
+    get:
+      summary: "Get specific aircraft"
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: integer id
+          schema:
+            $ref: "#/components/schemas/Id"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Aircraft"
+          description: "OK"
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Aircraft"
+          description: "NOT FOUND"
+        "406":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Aircraft"
+          description: "NOT ACCEPTABLE"
+      tags:
+        - Aircrafts
+
+    post:
+      summary: "Add an aircraft"
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: an id of the serie this aircraft is based on
+          schema:
+            $ref: "#/components/schemas/Id"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Aircraft"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Aircraft"
+          description: "OK"
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Aircraft"
+          description: "NOT FOUND"
+        "406":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Aircraft"
+          description: "NOT ACCEPTABLE"
+      tags:
+        - Aircrafts
+
+    delete:
+      summary: "Delete specific aircraft"
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: integer id
+          schema:
+            $ref: "#/components/schemas/Id"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Aircraft"
+          description: "OK"
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Aircraft"
+          description: "NOT FOUND"
+        "406":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Aircraft"
+          description: "NOT ACCEPTABLE"
+      tags:
+        - Aircrafts
+
+    put:
+      summary: "Edit specific aircraft"
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: integer id
+          schema:
+            $ref: "#/components/schemas/Id"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Aircraft"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Aircraft"
+          description: "OK"
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Aircraft"
+          description: "NOT FOUND"
+        "406":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Aircraft"
+          description: "NOT ACCEPTABLE"
+      tags:
+        - Aircrafts
+
+  /aircraft/edit-components/{id}:
+    put:
+      summary: "Update aircraft components"
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: integer id
+          schema:
+            $ref: "#/components/schemas/Id"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Component"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Aircraft"
+          description: "OK"
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Aircraft"
+          description: "NOT FOUND"
+        "406":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Aircraft"
+          description: "NOT ACCEPTABLE"
+      tags:
+        - Aircrafts
+
+  /aerobridge-id/{id}:
+    get:
+      summary: Returns a component OR a aircraft
+      description: Returns a component OR a aircraft depending on the aerobridge id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: interger id
+          schema:
+            $ref: "#/components/schemas/Id"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/Aircraft"
+                  - $ref: "#/components/schemas/Component"
+          description: "OK"
+        "406":
+          description: "Not Acceptable"
+        "500":
+          description: "Internal Server Error"
+      tags:
+        - AerobridgeId
+
+tags:
+  - name: Ping
+    description: "Returns pong if server is active"
+  - name: Models
+    description: "A model is a set of blueprints called 'series'"
+  - name: Aircrafts
+    description: "An aircraft is a physical representation of a serie"
+  - name: Series
+    description: "A serie is a blueprint for a physical aircraft"
+  - name: Master components
+    description: "A master component is a blueprint for a physical component"
+  - name: Component
+    description: "A component is a physical representation of a master component"
+  - name: AerobridgeId
+    description: "An unique identifier for a component or aircraft"
+
+components:
+  schemas:
+    Id:
+      type: integer
+    Model:
+      type: object
+      properties:
+        modelId:
+          type: integer
+        aerobridgeId:
+          type: string
+          description: AerobridgeId.class
+        name:
+          type: string
+        popularName:
+          type: string
+        category:
+          type: string
+        createdAt:
+          type: object
+          description: java.sql.date
+        updatedAt:
+          type: object
+          description: java.sql.data
+
+    Aircraft:
+      type: object
+      properties:
+        aircraftId:
+          type: integer
+        aerobridgeId:
+          type: string
+        manufacturer:
+          type: string
+        operator:
+          type: string
+        category:
+          type: string
+        name:
+          type: string
+        status:
+          type: string
+        createdAt:
+          type: object
+          description: java.sql.date
+        updatedAt:
+          type: object
+          description: java.sql.date
+
+    Serie:
+      type: object
+      properties:
+        serieId:
+          type: integer
+        aerobridgeId:
+          type: string
+        serie:
+          type: string
+        dimensionLength:
+          type: integer
+        dimensionWidth:
+          type: integer
+        dimensionHeight:
+          type: integer
+        maxRange:
+          type: number
+          description: double
+        maxSpeed:
+          type: number
+          description: double
+        maxEndurance:
+          type: number
+          description: double
+        createdAt:
+          type: object
+          description: java.sql.date
+        updatedAt:
+          type: object
+          description: java.sql.date
+
+    MasterComponent:
+      type: object
+      properties:
+        masterComponentId:
+          type: integer
+        availableStock:
+          type: integer
+        priceUpdatedAt:
+          type: object
+          description: timestamp
+        latestPrice:
+          type: number
+          description: double
+        minimalStock:
+          type: integer
+        name:
+          type: string
+        source:
+          type: string
+        family:
+          type: string
+        favouriteStore:
+          type: string
+        gtinId:
+          type: number
+          description: long
+        createdAt:
+          type: object
+          description: java.sql.date
+        updatedAt:
+          type: object
+          description: java.sql.date
+
+    Component:
+      type: object
+      properties:
+        componentId:
+          type: integer
+        aerobridgeId:
+          type: string
+        name:
+          type: integer
+        custodyOn:
+          type: object
+          description: java.sql.date
+        status:
+          type: string
+        location:
+          type: string
+        isActive:
+          type: boolean
+        createdAt:
+          type: object
+          description: java.sql.date
+        updatedAt:
+          type: object
+          description: java.sql.date
+  

@@ -115,7 +115,7 @@ public class SerieService {
         }
     }
 
-    public ResponseEntity<?> editMasterComponents(ArrayList<?> masterComponents, Integer serieId) {
+    public ResponseEntity<?> editMasterComponents(ArrayList<?> newMasterComponents, Integer serieId) {
         try {
             Iterable<SerieMasterComponent> serieMasterComponents = serieMasterComponentRepo.findBySerieId(serieId);
             ArrayList<Integer> masterComponentIds = new ArrayList<Integer>();
@@ -123,10 +123,10 @@ public class SerieService {
                 masterComponentIds.add(serieMasterComponent.getMasterComponent().getMasterComponentId());
             }
             Serie serie = serieRepo.findById(serieId).get();
-            for (Object mCompObj : masterComponents) {
-                LinkedHashMap<?, ?> mComp = (LinkedHashMap<?, ?>) mCompObj;
-                Integer quantity = Integer.valueOf(mComp.get("quantity").toString());
-                Integer masterComponentId = Integer.valueOf(mComp.get("masterComponentId").toString());
+            for (Object newMasterComponentObj : newMasterComponents) {
+                LinkedHashMap<?, ?> newMasterComponent = (LinkedHashMap<?, ?>) newMasterComponentObj;
+                Integer quantity = Integer.valueOf(newMasterComponent.get("quantity").toString());
+                Integer masterComponentId = Integer.valueOf(newMasterComponent.get("masterComponentId").toString());
                 if (!masterComponentIds.contains(masterComponentId)) {
                     MasterComponent masterComponent = masterComponentRepo.findById(masterComponentId).get();
                     SerieMasterComponent serieMasterComponent = new SerieMasterComponent();
@@ -134,11 +134,20 @@ public class SerieService {
                     serieMasterComponent.setSerie(serie);
                     serieMasterComponent.setMasterComponent(masterComponent);
                     serieMasterComponentRepo.save(serieMasterComponent);
+                } else if (masterComponentIds.contains(masterComponentId)) {
+                    SerieMasterComponent serieMasterComponent = serieMasterComponentRepo
+                            .findByMaterComponentIdAndSerieId(masterComponentId, serie.getSerieId()).get();
+                    if (serieMasterComponent.getQuantity() != quantity) {
+                        System.out.println("test");
+                        System.out.println(quantity);
+                        serieMasterComponent.setQuantity(quantity);
+                        serieMasterComponentRepo.save(serieMasterComponent);
+                    }
                 }
             }
             for (SerieMasterComponent serieMasterComponent : serieMasterComponents) {
                 Boolean found = false;
-                for (Object mCompObj : masterComponents) {
+                for (Object mCompObj : newMasterComponents) {
                     LinkedHashMap<?, ?> mComp = (LinkedHashMap<?, ?>) mCompObj;
                     Integer masterComponentId = Integer.valueOf(mComp.get("masterComponentId").toString());
                     if (serieMasterComponent.getMasterComponent().getMasterComponentId().equals(masterComponentId)) {
